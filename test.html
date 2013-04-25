@@ -5,6 +5,7 @@
 <script type="text/javascript" src="jquery.min.js"></script>
 <script type="text/javascript" src="audioStream.js"></script>
 <script type="text/javascript" src="synth.js"></script>
+<script src="leap.min.js"></script>
 </head>
 <body>
 <h1>HTML5 Synth Test</h1>
@@ -13,29 +14,17 @@
 //36 = A440, 37 is one half-step up, 48 is an octave up, etc.
 //99 = No sound
 var melody = {
-    notes: [
-        22,99,99,99,25,99,99,99,
-        22,99,22,99,25,99,25,99,
-        27,99,99,99,25,99,99,99,
-        24,99,99,99,22,99,99,99,
-        22,99,99,99,25,99,99,99,
-        22,99,22,99,25,99,25,99,
-        27,99,99,99,25,99,99,99,
-        27,99,99,99,28,99,99,99
-    ],
+    notes: [22],
     synth: melodySynth,
     volume: 0.1
 };
 
 var bass = {
     notes: [
-        10,10,10,99, 8, 8, 8,99,
-        10,10,10,99,13,13,13,99,
-         4, 4, 4,99,13,13,13,13,
-        12,12,12,12,10,10,10,99        
+        22
     ],
     synth: bassSynth,
-    volume: 0.05
+    volume: 0.1
 };
 
 //1 = snare, 2 = bass drum
@@ -59,14 +48,33 @@ var hihat = {
 };
 
 
-var voices = [melody, bass, drums, hihat];
+var voices = [bass];
 
-var volume = 1, bpm = 80;
+var volume = 1, bpm = 10;
 var node = audioStream(function(startSample, buffer, bufferSize, sampleRate) {
     for(var i = 0; i < bufferSize; i++) {
         var time = (startSample + i) / sampleRate; 
         buffer[i] = playVoices(voices, time, volume, bpm);
     }
+});
+
+window.iddleReads = 0;
+window.leapNote = 22;
+window.leapModulation = 0.95;
+Leap.loop(function(frame) {
+  if(hand = frame.hands[0]) {
+    window.leapNote = (hand.direction[1] +1 ) / 2 * 35 + 10;
+    window.leapModulation = (hand.direction[0] +1 ) / 0.5;
+    bass.notes[0] = window.leapNote;
+    window.iddleReads = 0;
+  } else {
+    if(window.iddleReads > 10) {
+       window.leapNote = 99;
+       bass.notes[0] = window.leapNote;
+    } else {
+      window.iddleReads++;
+    }
+  }
 });
 </script>
 </body>

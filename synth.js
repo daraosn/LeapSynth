@@ -33,16 +33,16 @@ var sampleSquare = function(note, time, notePos) {
 var melodySynth = function(note, time, notePos) {
     if(note == NO_NOTE) return 0;
     var decay = 0.01;
-    var sample = sampleTriangle(note, time, notePos) * 0.05;
-    sample += sampleSine(note, time, notePos) * 0.95;
-    sample *= Math.pow(1 - (notePos * decay), 4);
+    var sample = sampleSquare(note, time, notePos) * (1-window.leapModulation);
+    sample += sampleSine(note, time, notePos) * (window.leapModulation);
+    //sample *= Math.pow(1 - (notePos * decay), 4);
     return sample;
 };
 
 var bassSynth = function(note, time, notePos) {
     if(note == NO_NOTE) return 0;
-    var sample = sampleTriangle(note, time, notePos) * 0.005;
-    sample += sampleSine(note, time, notePos) * 0.995;
+    var sample = sampleTriangle(note, time, notePos) * (1-window.leapModulation);
+    sample += sampleSine(note, time, notePos) * window.leapModulation;
     return sample;
 };
 

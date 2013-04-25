@@ -1,6 +1,8 @@
+window.SAMPLE_RATE = 44100;
+window.BUFFER_SIZE = 1024;
 var audioStream = function(fillBuffer) {
-    var BUFFER_SIZE = 1024;
-    var SAMPLE_RATE = 44100;
+    //var BUFFER_SIZE = 1024;
+    //var SAMPLE_RATE = 44100;
     var frame = 0;
     var samples = new Float32Array(BUFFER_SIZE);
 
